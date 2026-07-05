@@ -1,0 +1,142 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Rooms
+{% endblock %}
+{% block admin_title %}Rooms{% endblock %}
+{% block admin_subtitle %}Manage room inventory{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="list-toolbar">
+        <form method="GET" class="list-toolbar-form">
+            <div class="list-toolbar-row">
+                <div class="list-search">
+                    <input class="form-input" type="text" name="search" placeholder="Search by room no or hotel..." value="{{search}}">
+                    <select class="form-input" name="room_status">
+                        <option value="ALL" {% if selected_status=="ALL" %}selected{% endif %}>All Status</option>
+                        <option value="AVAILABLE" {% if selected_status=="AVAILABLE" %}selected{% endif %}>Available</option>
+                        <option value="OCCUPIED" {% if selected_status=="OCCUPIED" %}selected{% endif %}>Occupied</option>
+                        <option value="BOOKED" {% if selected_status=="BOOKED" %}selected{% endif %}>Booked</option>
+                        <option value="MAINTAINENCE" {% if selected_status=="MAINTAINENCE" %}selected{% endif %}>Maintenance</option>
+                    </select>
+                    <select class="form-input" name="category">
+                        <option value="ALL" {% if selected_category=="ALL" %}selected{% endif %}>All Categories</option>
+                        <option value="STANDARD" {% if selected_category=="STANDARD" %}selected{% endif %}>Standard</option>
+                        <option value="DELUXE" {% if selected_category=="DELUXE" %}selected{% endif %}>Deluxe</option>
+                        <option value="SUITE" {% if selected_category=="SUITE" %}selected{% endif %}>Suite</option>
+                    </select>
+                    <input class="primary-button" type="submit" value="Apply">
+                </div>
+                <div class="list-toolbar-right">
+                    <select class="form-input" name="sort" onchange="this.form.submit()">
+                        <option value="room_no" {% if selected_sort=="room_no" %}selected{% endif %}>Room No</option>
+                        <option value="current_price" {% if selected_sort=="current_price" %}selected{% endif %}>Price</option>
+                        <option value="capacity" {% if selected_sort=="capacity" %}selected{% endif %}>Capacity</option>
+                        <option value="floor" {% if selected_sort=="floor" %}selected{% endif %}>Floor</option>
+                    </select>
+                    <select class="form-input" name="order" onchange="this.form.submit()">
+                        <option value="asc" {% if selected_order=="asc" %}selected{% endif %}>Asc</option>
+                        <option value="desc" {% if selected_order=="desc" %}selected{% endif %}>Desc</option>
+                    </select>
+                    <a class="primary-button" href="{{url_for('add_room')}}">+ Add Room</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="list-card">
+        {% if rooms.items %}
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>Room No</th>
+                    <th>Hotel</th>
+                    <th>Category</th>
+                    <th>Price/Night</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room in rooms.items %}
+                <tr>
+                    <td><strong>{{room.room_no}}</strong></td>
+                    <td>{{room.hotel.hotel_name}}</td>
+                    <td>{{room.category}}</td>
+                    <td>&#8377;{{room.current_price}}</td>
+                    <td><span class="status-badge status-{{room.room_status|lower}}">{{room.room_status}}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <a class="table-action" href="{{url_for('edit_room',room_id=room.room_id)}}">Edit</a>
+                            <a class="table-action" href="{{url_for('manage_rooms',room_id=room.room_id,page=rooms.page,room_status=selected_status,search=search,category=selected_category,sort=selected_sort,order=selected_order)}}">Details</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {% if rooms.has_prev %}
+            <a href="{{url_for('manage_rooms',page=rooms.prev_num,room_status=selected_status,search=search,category=selected_category,sort=selected_sort,order=selected_order)}}">&#8592; Previous</a>
+            {% endif %}
+            <span>Page {{rooms.page}} of {{rooms.pages}}</span>
+            {% if rooms.has_next %}
+            <a href="{{url_for('manage_rooms',page=rooms.next_num,room_status=selected_status,search=search,category=selected_category,sort=selected_sort,order=selected_order)}}">Next &#8594;</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="list-empty">
+            <h3>No Rooms Found</h3>
+            <p>Try adjusting your filters or <a href="{{url_for('add_room')}}">add a new room</a>.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if drawer_open and selected_room %}
+    <div class="list-card">
+        <div class="drawer-header">
+            <h3>Room {{selected_room.room_no}} &mdash; Details</h3>
+            <a class="table-action" href="{{url_for('manage_rooms',page=rooms.page,room_status=selected_status,search=search,category=selected_category,sort=selected_sort,order=selected_order)}}">&#10005; Close</a>
+        </div>
+
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:#888;margin-bottom:10px;">Basic Information</h4>
+        <table class="booking-table details-table">
+            <tbody>
+                <tr><th>Room No</th><td>{{selected_room.room_no}}</td></tr>
+                <tr><th>Hotel</th><td>{{selected_room.hotel.hotel_name}}</td></tr>
+                <tr><th>Category</th><td>{{selected_room.category}}</td></tr>
+                <tr><th>Capacity</th><td>{{selected_room.capacity}} people</td></tr>
+                <tr><th>Beds</th><td>{{selected_room.beds}}</td></tr>
+                <tr><th>Floor</th><td>{{selected_room.floor}}</td></tr>
+                <tr><th>Price</th><td>&#8377;{{selected_room.current_price}}/night</td></tr>
+                <tr><th>Status</th><td><span class="status-badge status-{{selected_room.room_status|lower}}">{{selected_room.room_status}}</span></td></tr>
+            </tbody>
+        </table>
+
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:#888;margin:18px 0 10px;">Amenities</h4>
+        <div class="amenities-grid">
+            {% if amenities %}
+            {% for item in amenities %}
+            <span class="amenity-tag">{{item.amenity_name}}</span>
+            {% endfor %}
+            {% else %}
+            <p style="color:#888;font-size:14px;">No amenities listed for this room category.</p>
+            {% endif %}
+        </div>
+
+        <h4 style="font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:#888;margin:18px 0 10px;">Additional Information</h4>
+        <table class="booking-table details-table">
+            <tbody>
+                <tr><th>Created</th><td>{{selected_room.created_at}}</td></tr>
+                <tr><th>Updated</th><td>{{selected_room.updated_at}}</td></tr>
+            </tbody>
+        </table>
+
+        <div class="drawer-actions">
+            <a class="primary-button" href="{{url_for('room_profile',room_id=selected_room.room_id)}}">View Full Profile</a>
+            <a class="primary-button" href="{{url_for('edit_room',room_id=selected_room.room_id)}}">Edit Room</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

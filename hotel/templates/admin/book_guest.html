@@ -1,0 +1,99 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Guest Booking
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Guest Booking</h1>
+        <section class="admin-section">
+            <h2>Booking Summary</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{room.hotel.hotel_name}}</td>
+                    <th>Room No</th>
+                    <td>{{room.room_no}}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{room.category}}</td>
+                    <th>Capacity</th>
+                    <td>{{room.capacity}}</td>
+                </tr>
+                <tr>
+                    <th>Check In</th>
+                    <td>{{check_in_date}}</td>
+                    <th>Check Out</th>
+                    <td>{{check_out_date}}</td>
+                </tr>
+                <tr>
+                    <th>Total Nights</th>
+                    <td>{{total_nights}}</td>
+                    <th>Guests</th>
+                    <td>{{number_of_people}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Price Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Subtotal</th>
+                    <td>₹ {{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Tax</th>
+                    <td>₹ {{tax}}</td>
+                </tr>
+                <tr>
+                    <th>Discount</th>
+                    <td>₹ {{discount}}</td>
+                </tr>
+                <tr>
+                    <th>Grand Total</th>
+                    <td>₹ {{grand_total}}</td>
+                </tr>
+            </table>
+        </section>
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.guest_name.label(class="form-label")}}
+                {{form.guest_name(class="form-input")}}
+                {% for error in form.guest_name.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.gender.label(class="form-label")}}
+                {{form.gender(class="form-input")}}
+                {% for error in form.gender.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.age.label(class="form-label")}}
+                {{form.age(class="form-input")}}
+                {% for error in form.age.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.contact_number.label(class="form-label")}}
+                {{form.contact_number(class="form-input")}}
+                {% for error in form.contact_number.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.number_of_people.label(class="form-label")}}
+                {{form.number_of_people(class="form-input",readonly=True)}}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button",value="Confirm Booking")}}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

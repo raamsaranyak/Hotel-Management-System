@@ -1,0 +1,48 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Submit Complaint
+{% endblock %}
+{% block content %}
+<div class="customer-page">
+    <div class="customer-card">
+        <h1 class="customer-heading">Submit Complaint</h1>
+        <section class="customer-section">
+            <h2>Booking Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{booking.booking_id}}</td>
+                    <th>Hotel</th>
+                    <td>{{booking.hotel.hotel_name}}</td>
+                </tr>
+                <tr>
+                    <th>Room No</th>
+                    <td>{{booking.room.room_no}}</td>
+                    <th>Booking Status</th>
+                    <td>{{booking.booking_status}}</td>
+                </tr>
+                <tr>
+                    <th>Check In Date</th>
+                    <td>{{booking.check_in_date}}</td>
+                    <th>Check Out Date</th>
+                    <td>{{booking.check_out_date}}</td>
+                </tr>
+            </table>
+        </section>
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.complaint_text.label(class="form-label")}}
+                {{form.complaint_text(class="form-input",rows=8,required=True)}}
+                {% for error in form.complaint_text.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button",value="Submit Complaint")}}
+                <a class="primary-button" href="{{url_for('booking_history')}}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Update Guest
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Update Guest</h1>
+        <section class="admin-section">
+            <h2>Booking Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{guest.booking.booking_id}}</td>
+                    <th>Hotel</th>
+                    <td>{{guest.booking.hotel.hotel_name}}</td>
+                </tr>
+                <tr>
+                    <th>Room</th>
+                    <td>{{guest.booking.room.room_no}}</td>
+                    <th>Status</th>
+                    <td>{{guest.booking.booking_status}}</td>
+                </tr>
+            </table>
+        </section>
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.guest_name.label(class="form-label")}}
+                {{form.guest_name(class="form-input")}}
+                {% for error in form.guest_name.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.gender.label(class="form-label")}}
+                {{form.gender(class="form-input")}}
+                {% for error in form.gender.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.age.label(class="form-label")}}
+                {{form.age(class="form-input")}}
+                {% for error in form.age.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.contact_number.label(class="form-label")}}
+                {{form.contact_number(class="form-input")}}
+                {% for error in form.contact_number.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.number_of_people.label(class="form-label")}}
+                {{form.number_of_people(class="form-input")}}
+                {% for error in form.number_of_people.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button",value="Update Guest")}}
+                <a class="primary-button" href="{{url_for('manage_booking',booking_id=guest.booking_id)}}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

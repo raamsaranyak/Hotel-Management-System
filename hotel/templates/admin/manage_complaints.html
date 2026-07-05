@@ -1,0 +1,84 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Complaints
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Manage Complaints</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label">Search</label>
+                <input class="form-input" type="text" name="search"
+                    placeholder="Search Complaint ID, Booking ID or Customer Name" value="{{search}}">
+            </div>
+            <div class="form-field">
+                <label class="form-label">Status</label>
+                <select class="form-input" name="complaint_status">
+                    <option value="ALL" {% if selected_status=="ALL" %}selected{% endif %}>All Status</option>
+                    <option value="OPEN" {% if selected_status=="OPEN" %}selected{% endif %}>Open</option>
+                    <option value="IN_PROGRESS" {% if selected_status=="IN_PROGRESS" %}selected{% endif %}>In Progress
+                    </option>
+                    <option value="RESOLVED" {% if selected_status=="RESOLVED" %}selected{% endif %}>Resolved</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Sort By</label>
+                <select class="form-input" name="sort_by">
+                    <option value="complaint_datetime" {% if selected_sort=="complaint_datetime" %}selected{% endif %}>
+                        Complaint Date</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Order</label>
+                <select class="form-input" name="direction">
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply">
+            </div>
+        </form>
+        {% if complaints.items %}
+        <table class="booking-table">
+            <tr>
+                <th>Complaint ID</th>
+                <th>Customer</th>
+                <th>Booking</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            {% for complaint in complaints.items %}
+            <tr>
+                <td>{{complaint.complaint_id}}</td>
+                <td><a
+                        href="{{url_for('manage_user',user_id=complaint.user.user_id)}}">{{complaint.user.customer_details.customer_name}}</a>
+                </td>
+                <td><a href="{{url_for('manage_booking',booking_id=complaint.booking_id)}}">{{complaint.booking_id}}</a>
+                </td>
+                <td>{{complaint.complaint_status}}</td>
+                <td>{{complaint.complaint_datetime}}</td>
+                <td><a class="primary-button"
+                        href="{{url_for('manage_complaint',complaint_id=complaint.complaint_id)}}">Manage</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="pagination">
+            {% if complaints.has_prev %}
+            <a class="primary-button"
+                href="{{url_for('manage_complaints',page=complaints.prev_num,complaint_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+            {% endif %}
+            <span>Page {{complaints.page}} of {{complaints.pages}}</span>
+            {% if complaints.has_next %}
+            <a class="primary-button"
+                href="{{url_for('manage_complaints',page=complaints.next_num,complaint_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <h2>No Complaints Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

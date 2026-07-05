@@ -1,0 +1,108 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+About
+{% endblock %}
+{% block content %}
+<div class="about-page">
+    <div class="about-card">
+        <div class="page-hero">
+            <h1>About Our Hotel</h1>
+            <p>Creating Memorable Stays Through Comfort, Hospitality and Service</p>
+        </div>
+        <section class="about-section">
+            <p>
+                We are committed to providing guests with a comfortable,
+                secure and enjoyable hospitality experience.
+            </p>
+        </section>
+        <section class="about-section">
+            <h2>Our Story</h2>
+            <p>
+                Our hotel was built with a vision of offering quality
+                accommodation and exceptional hospitality to every guest.
+            </p>
+        </section>
+        <section class="about-section">
+            <h2>Our Values</h2>
+            <div class="about-grid">
+                <div class="about-item">
+                    <h3>Guest Satisfaction</h3>
+                    <p>Every decision we make is focused on our guests.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Quality Service</h3>
+                    <p>We strive to deliver excellent hospitality experiences.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Comfort</h3>
+                    <p>Comfortable rooms and facilities for every guest.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Reliability</h3>
+                    <p>Dependable service you can trust throughout your stay.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Integrity</h3>
+                    <p>Honest and transparent interactions with our guests.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Safety</h3>
+                    <p>A secure environment for guests and staff.</p>
+                </div>
+            </div>
+        </section>
+        <section class="about-section">
+            <h2>Hotel Highlights</h2>
+            <div class="about-grid">
+                <div class="about-item">
+                    <h3>100+</h3>
+                    <p>Happy Guests</p>
+                </div>
+                <div class="about-item">
+                    <h3>24×7</h3>
+                    <p>Customer Support</p>
+                </div>
+                <div class="about-item">
+                    <h3>3+</h3>
+                    <p>Room Categories</p>
+                </div>
+                <div class="about-item">
+                    <h3>Easy</h3>
+                    <p>Online Booking</p>
+                </div>
+            </div>
+        </section>
+        <section class="about-section">
+            <h2>Meet Our Team</h2>
+            <div class="about-grid">
+                <div class="about-item">
+                    <h3>Reception Team</h3>
+                    <p>Assisting guests throughout their stay.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Housekeeping Team</h3>
+                    <p>Maintaining cleanliness and comfort.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Maintenance Team</h3>
+                    <p>Ensuring facilities remain in excellent condition.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Management Team</h3>
+                    <p>Leading operations and guest satisfaction.</p>
+                </div>
+            </div>
+        </section>
+        <section class="about-section">
+            <h2>Ready For Your Next Stay?</h2>
+            <p>
+                Experience comfort, convenience and exceptional hospitality.
+                Book your stay today and enjoy a memorable hotel experience.
+            </p>
+            <div class="form-actions">
+                <a class="primary-button" href="{{url_for('book')}}">Book Your Stay</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

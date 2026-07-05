@@ -1,0 +1,92 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Register
+{% endblock %}
+{% block content %}
+<div class="authentication-page">
+    <div class="authentication-card">
+        <h1 class="authentication-heading">
+            Register
+        </h1>
+        <form class="authentication-form" method="POST" autocomplete="on">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.username.label(class="form-label")}}
+                {{form.username(class="form-input",required=True)}}
+                {% for error in form.username.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.password.label(class="form-label")}}
+                {{form.password(class="form-input",required=True)}}
+                {% for error in form.password.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.confirm_password.label(class="form-label")}}
+                {{form.confirm_password(class="form-input",required=True)}}
+                {% for error in form.confirm_password.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.email.label(class="form-label")}}
+                {{form.email(class="form-input",required=True)}}
+                {% for error in form.email.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.customer_name.label(class="form-label")}}
+                {{form.customer_name(class="form-input",required=True)}}
+                {% for error in form.customer_name.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.gender.label(class="form-label")}}
+                <div class="radio-group">
+                    {% for subfield in form.gender %}
+                    <div class="radio-field">
+                        {{subfield(class="radio-input")}}
+                        {{subfield.label(class="radio-label")}}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.gender.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.date_of_birth.label(class="form-label")}}
+                {{form.date_of_birth(class="form-input",required=True)}}
+                {% for error in form.date_of_birth.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.contact_number.label(class="form-label")}}
+                {{form.contact_number(class="form-input",required=True)}}
+                {% for error in form.contact_number.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.address.label(class="form-label")}}
+                {{form.address(class="form-input")}}
+                {% for error in form.address.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button")}}
+            </div>
+            <div class="authentication-links">
+                Already Have an Account?<a href="{{url_for('login')}}">Sign In</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

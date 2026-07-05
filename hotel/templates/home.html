@@ -1,0 +1,100 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block content %}
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to Grand Hotel</h1>
+        <p class="hero-subtitle">Experience comfort and luxury in the heart of Tirupati</p>
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
+            <a href="{{url_for('book')}}" class="hero-button">Book Your Stay</a>
+            <a href="{{url_for('rooms')}}" class="hero-button hero-button-outline">Explore Rooms</a>
+            {% else %}
+            <a href="{{url_for('login')}}" class="hero-button">Book Your Stay</a>
+            <a href="{{url_for('register')}}" class="hero-button hero-button-outline">Register Now</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<section id="contact">
+    <div class="contact-container">
+        <div class="contact-header">
+            <h1>You Have Questions, We Have Answers</h1>
+            <p>Our team is ready to assist you with every detail, big or small.</p>
+        </div>
+        <div class="contact-layout">
+            <div class="contact-info">
+                <div class="contact-info-item">
+                    <span class="contact-icon">L</span>
+                    <div>
+                        <h3>Location</h3>
+                        <p>Tirupati, Andhra Pradesh, India</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="contact-icon">E</span>
+                    <div>
+                        <h3>Email</h3>
+                        <p>support@hotel.com</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="contact-icon">P</span>
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+91 9999999999</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="contact-icon">H</span>
+                    <div>
+                        <h3>Reception Hours</h3>
+                        <p>24&times;7 Available</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form-wrapper">
+                <h2>Send Us a Message</h2>
+                <form method="POST" class="contact-form">
+                    {{form.hidden_tag()}}
+                    <div class="form-field">
+                        {{form.name.label(class="form-label")}}
+                        {{form.name(class="form-input",placeholder="Your name")}}
+                        {% for error in form.name.errors %}
+                        <p class="field-error">{{error}}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="form-field">
+                        {{form.contact_number.label(class="form-label")}}
+                        {{form.contact_number(class="form-input",placeholder="Your contact number")}}
+                        {% for error in form.contact_number.errors %}
+                        <p class="field-error">{{error}}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="form-field">
+                        {{form.email.label(class="form-label")}}
+                        {{form.email(class="form-input",placeholder="Your email")}}
+                        {% for error in form.email.errors %}
+                        <p class="field-error">{{error}}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="form-field">
+                        {{form.message.label(class="form-label")}}
+                        {{form.message(class="form-input",placeholder="Tell us what you need...",rows=5)}}
+                        {% for error in form.message.errors %}
+                        <p class="field-error">{{error}}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="form-actions">
+                        {{form.submit(class="primary-button")}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

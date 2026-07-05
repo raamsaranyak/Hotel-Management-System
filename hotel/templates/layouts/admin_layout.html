@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Admin Panel</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>Admin Panel</h2>
+            <nav>
+                <ul>
+                    <li><a href="{{url_for('admin_dashboard')}}">Dashboard</a></li>
+                    <li><a href="{{url_for('manage_hotels')}}">Hotels</a></li>
+                    <li><a href="{{url_for('manage_rooms')}}">Rooms</a></li>
+                    <li><a href="{{url_for('manage_bookings')}}">Bookings</a></li>
+                    <li><a href="{{url_for('manage_users')}}">Users</a></li>
+                    <li><a href="{{url_for('manage_admins')}}">Admins</a></li>
+                    <li><a href="{{url_for('manage_reviews')}}">Reviews</a></li>
+                    <li><a href="{{url_for('manage_complaints')}}">Complaints</a></li>
+                    <li><a href="{{url_for('manage_contact_messages')}}">Contact Messages</a></li>
+                    <li><a href="{{url_for('manage_audit_logs')}}">Audit Logs</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-bottom">
+                <h3>Support</h3>
+                <nav>
+                    <ul>
+                        <li><a href="{{url_for('home')}}">Customer Site</a></li>
+                        <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="admin-main">
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1>{% block admin_title %}Dashboard{% endblock %}</h1>
+                    <p>{% block admin_subtitle %}Overview and management{% endblock %}</p>
+                </div>
+                <div class="admin-header-right">
+                    <span class="notification-icon" title="Notifications">N</span>
+                    <div class="avatar">
+                        {% if current_user.is_authenticated %}
+                        {{current_user.username[0]|upper}}
+                        {% else %}
+                        A
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+            <main class="admin-content">
+                {% with messages=get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category,message in messages %}
+                <div class="flash-message {{category}}">
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% block content %}
+                {% endblock %}
+            </main>
+            <footer class="admin-footer">
+                <p>&copy; 2026 Hotel Management System. All Rights Reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+    <a href="{{url_for('home')}}#contact" class="support-float-button" title="Contact Support">?</a>
+</body>
+</html>

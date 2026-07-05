@@ -1,0 +1,73 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Complaint Profile
+{% endblock %}
+{% block content %}
+<div class="customer-page">
+    <div class="customer-card">
+        <h1 class="customer-heading">Complaint Profile</h1>
+        <section class="customer-section">
+            <h2>Complaint Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Complaint ID</th>
+                    <td>{{complaint.complaint_id}}</td>
+                    <th>Booking ID</th>
+                    <td>{{complaint.booking_id}}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{complaint.complaint_status}}</td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Submitted On</th>
+                    <td>{{complaint.complaint_datetime}}</td>
+                    <th>Hotel</th>
+                    <td>{{complaint.booking.hotel.hotel_name}}</td>
+                </tr>
+                <tr>
+                    <th>Room Number</th>
+                    <td>{{complaint.booking.room.room_no}}</td>
+                    <th>Check In</th>
+                    <td>{{complaint.booking.check_in_date}}</td>
+                </tr>
+                <tr>
+                    <th>Check Out</th>
+                    <td>{{complaint.booking.check_out_date}}</td>
+                    <th></th>
+                    <td></td>
+                </tr>
+            </table>
+        </section>
+        <section class="customer-section">
+            <h2>Complaint</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Description</th>
+                    <td>{{complaint.complaint_text}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="customer-section">
+            <h2>Resolution</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Resolution Details</th>
+                    <td>
+                        {% if complaint.complaint_status=="RESOLVED" %}
+                        {{complaint.resolution_details}}
+                        {% else %}
+                        Complaint has not been resolved yet.
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('my_complaints')}}">Back to My Complaints</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

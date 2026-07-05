@@ -1,0 +1,145 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Hotel Rooms - {{ hotel.hotel_name }}
+{% endblock %}
+{% block content %}
+<div class="rooms-page">
+    <div class="page-hero">
+        <h1>{{ hotel.hotel_name }}</h1>
+        <p>{{ hotel.location }} &mdash; Browse available rooms for your stay.</p>
+    </div>
+    <div class="booking-card" style="margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:140px;">
+                <label class="form-label">Check In</label>
+                <input class="form-input" type="date" value="{{ session.get('check_in_date', '') }}" disabled style="background:#f5f5f5;cursor:not-allowed;">
+            </div>
+            <div style="flex:1;min-width:140px;">
+                <label class="form-label">Check Out</label>
+                <input class="form-input" type="date" value="{{ session.get('check_out_date', '') }}" disabled style="background:#f5f5f5;cursor:not-allowed;">
+            </div>
+            <div style="flex:1;min-width:140px;">
+                <label class="form-label">Guests</label>
+                <input class="form-input" type="number" value="{{ session.get('number_of_people', 1) }}" disabled style="background:#f5f5f5;cursor:not-allowed;">
+            </div>
+            <div style="flex:1;min-width:140px;">
+                <label class="form-label">Category</label>
+                <select class="form-input" disabled style="background:#f5f5f5;cursor:not-allowed;">
+                    <option value="" {% if selected_category=="" or selected_category=="ALL" %}selected{% endif %}>All Categories</option>
+                    <option value="STANDARD" {% if selected_category=="STANDARD" %}selected{% endif %}>Standard</option>
+                    <option value="DELUXE" {% if selected_category=="DELUXE" %}selected{% endif %}>Deluxe</option>
+                    <option value="SUITE" {% if selected_category=="SUITE" %}selected{% endif %}>Suite</option>
+                </select>
+            </div>
+            <div class="form-actions" style="padding-top:18px;">
+                <a class="primary-button" href="{{url_for('book')}}" style="text-decoration:none;display:inline-block;text-align:center;">Modify Search</a>
+            </div>
+        </div>
+    </div>
+    <div class="rooms-layout">
+        <div class="rooms-grid">
+            {% if rooms %}
+            {% for room in rooms %}
+            {% if current_user.role=="admin" %}
+            <a href="{{url_for('book_guest',room_id=room.room_id)}}">
+            {% else %}
+            <a href="{{url_for('book_room',room_id=room.room_id)}}">
+            {% endif %}
+                <div class="room-card">
+                    <div class="room-card-image">
+                        <span class="room-card-badge">{{room.category}}</span>
+                    </div>
+                    <div class="room-card-body">
+                        <h3 class="room-card-title">Room {{room.room_no}}</h3>
+                        <p class="room-card-meta">{{room.hotel.hotel_name}} &middot; Floor {{room.floor}}</p>
+                        <div class="room-card-features">
+                            <span>{{room.capacity}} guests</span>
+                            <span>{{room.beds}}</span>
+                        </div>
+                        <div class="room-card-price">
+                            <span class="price-amount">&#8377;{{room.current_price}}</span>
+                            <span class="price-unit">/night</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="list-empty" style="grid-column:1/-1;">
+                <h3>No Rooms Available</h3>
+                <p>Try adjusting your filters or <a href="{{url_for('book')}}">try a different search.</a></p>
+            </div>
+            {% endif %}
+        </div>
+        <aside class="rooms-filters">
+            <div class="rooms-filter-header">
+                <h2>Filters</h2>
+                <a href="{{url_for('hotel_rooms',hotel_id=hotel.hotel_id)}}">Clear All</a>
+            </div>
+            <form method="GET" action="{{url_for('hotel_rooms',hotel_id=hotel.hotel_id)}}">
+                <div class="filter-fields">
+                    <div class="form-field">
+                        <label class="form-label" for="min_price">Min Price</label>
+                        <input class="form-input" type="number" id="min_price" name="min_price" value="{{min_price}}" placeholder="&#8377; 0">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="max_price">Max Price</label>
+                        <input class="form-input" type="number" id="max_price" name="max_price" value="{{max_price}}" placeholder="&#8377; 10000+">
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="category">Category</label>
+                        <select class="form-input" id="category" name="category">
+                            <option value="" {% if selected_category=="" or selected_category=="ALL" %}selected{% endif %}>All</option>
+                            <option value="STANDARD" {% if selected_category=="STANDARD" %}selected{% endif %}>Standard</option>
+                            <option value="DELUXE" {% if selected_category=="DELUXE" %}selected{% endif %}>Deluxe</option>
+                            <option value="SUITE" {% if selected_category=="SUITE" %}selected{% endif %}>Suite</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Guests</label>
+                        <div class="radio-group">
+                            {% for value,label in [('Any','Any'),('1','1'),('2','2'),('3','3'),('4','4'),('5','5+')] %}
+                            <div class="radio-field">
+                                <input class="radio-input" type="radio" id="ppl_{{value}}" name="people" value="{{value}}" {% if (value=='Any' and (selected_people=='Any' or not selected_people)) or selected_people==value %}checked{% endif %}>
+                                <label class="radio-label" for="ppl_{{value}}">{{label}}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="beds">Beds</label>
+                        <select class="form-input" id="beds" name="beds">
+                            <option value="Any" {% if selected_beds=="Any" %}selected{% endif %}>Any</option>
+                            <option value="1 Single" {% if selected_beds=="1 Single" %}selected{% endif %}>1 Single</option>
+                            <option value="1 Double" {% if selected_beds=="1 Double" %}selected{% endif %}>1 Double</option>
+                            <option value="1 Queen" {% if selected_beds=="1 Queen" %}selected{% endif %}>1 Queen</option>
+                            <option value="2 Queen" {% if selected_beds=="2 Queen" %}selected{% endif %}>2 Queen</option>
+                            <option value="1 King" {% if selected_beds=="1 King" %}selected{% endif %}>1 King</option>
+                            <option value="2 King" {% if selected_beds=="2 King" %}selected{% endif %}>2 King</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="sort_by">Sort By</label>
+                        <select class="form-input" id="sort_by" name="sort_by">
+                            <option value="random" {% if selected_sort=="random" %}selected{% endif %}>Random</option>
+                            <option value="price" {% if selected_sort=="price" %}selected{% endif %}>Price</option>
+                            <option value="capacity" {% if selected_sort=="capacity" %}selected{% endif %}>Capacity</option>
+                            <option value="room_no" {% if selected_sort=="room_no" %}selected{% endif %}>Room No</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="direction">Order</label>
+                        <select class="form-input" id="direction" name="direction">
+                            <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Low to High</option>
+                            <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <input class="primary-button" type="submit" value="Apply">
+                </div>
+            </form>
+        </aside>
+    </div>
+</div>
+{% endblock %}

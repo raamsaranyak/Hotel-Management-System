@@ -1,0 +1,165 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Admin Dashboard
+{% endblock %}
+{% block admin_title %}Dashboard{% endblock %}
+{% block admin_subtitle %}System overview and management{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <!-- Room Status + Booking Overview side by side -->
+    <div class="dashboard-overview">
+        <!-- Room Status -->
+        <div class="dashboard-section-card">
+            <h3>Room Status</h3>
+            <div class="room-status-grid">
+                {% set total_rooms = available_rooms + occupied_rooms + booked_rooms + maintainence_rooms %}
+                {% set avail_pct = (available_rooms / total_rooms * 100) if total_rooms > 0 else 0 %}
+                {% set occ_pct = (occupied_rooms / total_rooms * 100) if total_rooms > 0 else 0 %}
+                {% set booked_pct = (booked_rooms / total_rooms * 100) if total_rooms > 0 else 0 %}
+                {% set maint_pct = (maintainence_rooms / total_rooms * 100) if total_rooms > 0 else 0 %}
+                <div class="room-status-item">
+                    <div class="status-label">Available</div>
+                    <div class="status-count">{{available_rooms}}</div>
+                    <div class="status-bar">
+                        <div class="status-bar-fill" style="width:{{avail_pct|int}}%"></div>
+                    </div>
+                </div>
+                <div class="room-status-item">
+                    <div class="status-label">Occupied</div>
+                    <div class="status-count">{{occupied_rooms}}</div>
+                    <div class="status-bar">
+                        <div class="status-bar-fill medium" style="width:{{occ_pct|int}}%"></div>
+                    </div>
+                </div>
+                <div class="room-status-item">
+                    <div class="status-label">Booked</div>
+                    <div class="status-count">{{booked_rooms}}</div>
+                    <div class="status-bar">
+                        <div class="status-bar-fill medium" style="width:{{booked_pct|int}}%"></div>
+                    </div>
+                </div>
+                <div class="room-status-item">
+                    <div class="status-label">Maintenance</div>
+                    <div class="status-count">{{maintainence_rooms}}</div>
+                    <div class="status-bar">
+                        <div class="status-bar-fill low" style="width:{{maint_pct|int}}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Booking Overview -->
+        <div class="dashboard-section-card">
+            <h3>Booking Overview</h3>
+            <div class="booking-overview-grid">
+                <div class="booking-overview-card">
+                    <div class="bo-label">Booked</div>
+                    <div class="bo-count">{{booked_count}}</div>
+                </div>
+                <div class="booking-overview-card">
+                    <div class="bo-label">Checked In</div>
+                    <div class="bo-count">{{checked_in_count}}</div>
+                </div>
+                <div class="booking-overview-card">
+                    <div class="bo-label">Checked Out</div>
+                    <div class="bo-count">{{checked_out_count}}</div>
+                </div>
+                <div class="booking-overview-card">
+                    <div class="bo-label">Cancelled</div>
+                    <div class="bo-count">{{cancelled_count}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Overview -->
+    <div class="dashboard-section-card">
+        <h3>System Overview</h3>
+        <div class="admin-grid grid-cols-6">
+            <div class="admin-stat-card">
+                <h3>Total Users</h3>
+                <p>{{user_count}}</p>
+            </div>
+            <div class="admin-stat-card">
+                <h3>Hotels</h3>
+                <p>{{hotel_count}}</p>
+            </div>
+            <div class="admin-stat-card">
+                <h3>Rooms</h3>
+                <p>{{room_count}}</p>
+            </div>
+            <div class="admin-stat-card">
+                <h3>Bookings</h3>
+                <p>{{booking_count}}</p>
+            </div>
+            <div class="admin-stat-card">
+                <h3>Reviews</h3>
+                <p>{{review_count}}</p>
+            </div>
+            <div class="admin-stat-card">
+                <h3>Messages</h3>
+                <p>{{message_count}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User + Complaints + Reviews summary row -->
+    <div class="dashboard-overview">
+        <div class="dashboard-section-card">
+            <h3>User Accounts</h3>
+            <div class="admin-grid grid-cols-3">
+                <div class="admin-stat-card">
+                    <h3>Active</h3>
+                    <p>{{active_users}}</p>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>Blocked</h3>
+                    <p>{{blocked_users}}</p>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>Inactive</h3>
+                    <p>{{inactive_users}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-section-card">
+            <h3>Complaints &amp; Reviews</h3>
+            <div class="admin-grid grid-cols-4">
+                <div class="admin-stat-card">
+                    <h3>Pending</h3>
+                    <p>{{pending_complaints}}</p>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>Resolved</h3>
+                    <p>{{resolved_complaints}}</p>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>Visible Reviews</h3>
+                    <p>{{visible_reviews}}</p>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>Hidden Reviews</h3>
+                    <p>{{hidden_reviews}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-section-card">
+        <h3>Quick Actions</h3>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('add_room')}}">Add Room</a>
+            <a class="primary-button" href="{{url_for('book')}}">Book Guest</a>
+            <a class="primary-button" href="{{url_for('manage_rooms')}}">Manage Rooms</a>
+            <a class="primary-button" href="{{url_for('manage_bookings')}}">Manage Bookings</a>
+            <a class="primary-button" href="{{url_for('manage_users')}}">Manage Users</a>
+            <a class="primary-button" href="{{url_for('manage_hotels')}}">Manage Hotels</a>
+            <a class="primary-button" href="{{url_for('add_hotel')}}">Add Hotel</a>
+            <a class="primary-button" href="{{url_for('manage_reviews')}}">Manage Reviews</a>
+            <a class="primary-button" href="{{url_for('manage_complaints')}}">Manage Complaints</a>
+            <a class="primary-button" href="{{url_for('manage_contact_messages')}}">Contact Messages</a>
+            <a class="primary-button" href="{{url_for('manage_audit_logs')}}">Audit Logs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

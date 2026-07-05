@@ -1,0 +1,193 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Booking Summary
+{% endblock %}
+{% block content %}
+<div class="booking-page">
+    <div class="booking-card">
+        <h1 class="booking-heading">Booking Summary</h1>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('hotel_rooms',hotel_id=room.hotel.hotel_id)}}">← Back to Rooms</a>
+        </div>
+        <section class="booking-section">
+            <h2>Stay Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Check In</th>
+                    <td>{{check_in_date}}</td>
+                </tr>
+                <tr>
+                    <th>Check Out</th>
+                    <td>{{check_out_date}}</td>
+                </tr>
+                <tr>
+                    <th>Total Nights</th>
+                    <td>{{total_nights}}</td>
+                </tr>
+                <tr>
+                    <th>Guests</th>
+                    <td>{{number_of_people}}</td>
+                </tr>
+                <tr>
+                    <th>Rooms Booked</th>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <th>Booking Date</th>
+                    <td>{{current_datetime}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Hotel Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{room.hotel.hotel_name}}</td>
+                </tr>
+                <tr>
+                    <th>Branch</th>
+                    <td>{{room.hotel.branch_name}}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{room.hotel.location}}</td>
+                </tr>
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{room.hotel.contact_number}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{room.hotel.email}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Room Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Room Number</th>
+                    <td>{{room.room_no}}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{room.category}}</td>
+                </tr>
+                <tr>
+                    <th>Beds</th>
+                    <td>{{room.beds}}</td>
+                </tr>
+                <tr>
+                    <th>Capacity</th>
+                    <td>{{room.capacity}}</td>
+                </tr>
+                <tr>
+                    <th>Floor</th>
+                    <td>{{room.floor}}</td>
+                </tr>
+                <tr>
+                    <th>Price Per Night</th>
+                    <td>₹ {{room.current_price}}</td>
+                </tr>
+                <tr>
+                    <th>Room Status</th>
+                    <td>{{room.room_status}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Amenities</h2>
+            {% if amenities %}
+            <ul>
+                {% for item in amenities %}
+                <li>{{item.amenity_name}}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No Amenities Available</p>
+            {% endif %}
+        </section>
+        <section class="booking-section">
+            <h2>Price Summary</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Price Per Night</th>
+                    <td>₹ {{room.current_price}}</td>
+                </tr>
+                <tr>
+                    <th>Total Nights</th>
+                    <td>{{total_nights}}</td>
+                </tr>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>₹ {{subtotal}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Coupon</h2>
+            <form method="POST">
+                <div class="form-field">
+                    <label class="form-label">Coupon Code</label>
+                    <input class="form-input" type="text" name="coupon_code" placeholder="Enter Coupon Code">
+                </div>
+                <div class="form-actions">
+                    <input class="primary-button" type="submit" name="apply_coupon" value="Apply Coupon">
+                </div>
+            </form>
+            {% if coupon_message %}
+            <p>{{coupon_message}}</p>
+            {% endif %}
+        </section>
+        <section class="booking-section">
+            <h2>Payment Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Room Charges</th>
+                    <td>₹ {{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Taxes</th>
+                    <td>₹ {{tax}}</td>
+                </tr>
+                <tr>
+                    <th>Discount</th>
+                    <td>₹ {{discount}}</td>
+                </tr>
+                <tr>
+                    <th>Grand Total</th>
+                    <td><strong>₹ {{grand_total}}</strong></td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Booking Policies</h2>
+            <ul>
+                <li>Check-In Time : After 12:00 PM</li>
+                <li>Check-Out Time : Before 11:00 AM</li>
+                <li>Government Photo ID is mandatory during Check-In.</li>
+                <li>Smoking is not allowed inside the room.</li>
+                <li>Pets are allowed only if permitted by the hotel.</li>
+                <li>Cancellation and refund are subject to hotel policy.</li>
+                <li>Damage to hotel property may incur additional charges.</li>
+            </ul>
+            <p>After successful payment, cancellation can be done from Booking History according to hotel policy.</p>
+        </section>
+        <section class="booking-section">
+            <h2>Secure Payment</h2>
+            <p><strong>Grand Total :</strong> ₹ {{grand_total}}</p>
+            <p>🔒 Payments are securely processed by Razorpay.</p>
+            <form method="POST">
+                <div class="form-field">
+                    <input type="checkbox" name="agree_terms" required>
+                    <label>I have read and agree to the hotel's booking and cancellation policies.</label>
+                </div>
+                <div class="form-actions">
+                    <input class="primary-button" type="submit" name="pay_now" value="Pay ₹ {{grand_total}} Securely">
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

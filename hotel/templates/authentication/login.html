@@ -1,0 +1,38 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Login
+{% endblock %}
+{% block content %}
+<div class="authentication-page">
+<div class="authentication-card">
+    <h1 class="authentication-heading">Login</h1>
+    <form class="authentication-form" method="POST" autocomplete="on">
+        {{form.hidden_tag()}}
+        <div class="form-field">
+            {{form.username.label(class="form-label")}}
+            {{form.username(class="form-input",required=True)}}
+            {% for error in form.username.errors %}
+            <p>{{error}}</p>
+            {% endfor %}
+        </div>
+        <div class="form-field">
+            {{form.password.label(class="form-label")}}
+            {{form.password(class="form-input",required=True)}}
+            {% for error in form.password.errors %}
+            <p class="field-error">{{error}}</p>
+            {% endfor %}
+        </div>
+        <div class="remember-me-field">
+            {{form.remember(class="remember-me-checkbox")}}
+            {{form.remember.label(class="remember-me-label")}}
+        </div>
+        <div class="form-buttons">
+            {{form.submit(class="primary-button")}}
+        </div>
+        <div class="authentication-links">
+            New User?<a href="{{url_for('register')}}">Sign Up</a>
+        </div>
+    </form>
+</div>
+</div>
+{% endblock %}

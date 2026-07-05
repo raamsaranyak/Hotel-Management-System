@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Hotel Management</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% with messages=get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category,message in messages %}
+    <div class="flash-message {{category}}">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('rooms')}}">Rooms</a></li>
+                <li><a href="{{url_for('about')}}">About Us</a></li>
+                <li><a href="{{url_for('services')}}">Services</a></li>
+                <li><a href="{{url_for('review')}}">Reviews</a></li>
+                <li><a href="{{url_for('home')}}#contact">Contact Us</a></li>
+                {% if current_user.is_authenticated %}
+                <li>
+                    <a href="#">Account</a>
+                    <ul>
+                        <li><a href="{{url_for('book')}}">Book Hotel</a></li>
+                        <li><a href="{{url_for('booking_history')}}">Booking History</a></li>
+                        <li><a href="{{url_for('profile')}}">Profile</a></li>
+                        <li><a href="{{url_for('my_complaints')}}">My Complaints</a></li>
+                    </ul>
+                </li>
+                {% if current_user.role=="admin" %}
+                <li><a href="{{url_for('admin_dashboard')}}">Admin Panel</a></li>
+                {% endif %}
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
+                {% else %}
+                <li><a href="{{url_for('login')}}">Login</a></li>
+                <li><a href="{{url_for('register')}}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2026 Hotel Management System. All Rights Reserved.</p>
+    </footer>
+
+    <a href="{{url_for('home')}}#contact" class="support-float-button" title="Contact Support">?</a>
+    <a href="#" class="back-to-top" title="Back to Top" id="backToTop">&#8593;</a>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            var btn = document.getElementById('backToTop');
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

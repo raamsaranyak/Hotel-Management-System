@@ -1,0 +1,83 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+My Complaints
+{% endblock %}
+{% block content %}
+<div class="customer-page">
+    <div class="customer-card">
+        <h1 class="customer-heading">My Complaints</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label" for="search">Search</label>
+                <input class="form-input" type="text" id="search" name="search"
+                    placeholder="Search Complaint ID or Booking ID" value="{{search}}">
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="complaint_status">Status</label>
+                <select class="form-input" id="complaint_status" name="complaint_status">
+                    <option value="ALL" {% if selected_status=="ALL" %}selected{% endif %}>All Status</option>
+                    <option value="OPEN" {% if selected_status=="OPEN" %}selected{% endif %}>Open</option>
+                    <option value="IN_PROGRESS" {% if selected_status=="IN_PROGRESS" %}selected{% endif %}>In Progress
+                    </option>
+                    <option value="RESOLVED" {% if selected_status=="RESOLVED" %}selected{% endif %}>Resolved</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="sort_by">Sort By</label>
+                <select class="form-input" id="sort_by" name="sort_by">
+                    <option value="complaint_datetime" {% if selected_sort=="complaint_datetime" %}selected{% endif %}>
+                        Complaint Date</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="direction">Order</label>
+                <select class="form-input" id="direction" name="direction">
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply">
+            </div>
+        </form>
+        {% if complaints.items %}
+        <table class="booking-table">
+            <tr>
+                <th>Complaint ID</th>
+                <th>Booking ID</th>
+                <th>Complaint</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            {% for complaint in complaints.items %}
+            <tr>
+                <td>{{complaint.complaint_id}}</td>
+                <td>{{complaint.booking_id}}</td>
+                <td>{{complaint.complaint_text}}</td>
+                <td>{{complaint.complaint_status}}</td>
+                <td>{{complaint.complaint_datetime}}</td>
+                <td>
+                    <a class="primary-button"
+                        href="{{url_for('complaint_profile',complaint_id=complaint.complaint_id)}}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="pagination">
+            {% if complaints.has_prev %}
+            <a class="primary-button"
+                href="{{url_for('my_complaints',page=complaints.prev_num,complaint_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+            {% endif %}
+            <span>Page {{complaints.page}} of {{complaints.pages}}</span>
+            {% if complaints.has_next %}
+            <a class="primary-button"
+                href="{{url_for('my_complaints',page=complaints.next_num,complaint_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <h2>No Complaints Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

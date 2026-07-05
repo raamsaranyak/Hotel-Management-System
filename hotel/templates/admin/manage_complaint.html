@@ -1,0 +1,77 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Complaint
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Complaint Profile</h1>
+        <section class="admin-section">
+            <h2>Customer Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Customer</th>
+                    <td><a
+                            href="{{url_for('manage_user',user_id=complaint.user.user_id)}}">{{complaint.user.customer_details.customer_name}}</a>
+                    </td>
+                    <th>Booking</th>
+                    <td><a
+                            href="{{url_for('manage_booking',booking_id=complaint.booking.booking_id)}}">{{complaint.booking.booking_id}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{complaint.booking.hotel.hotel_name}}</td>
+                    <th>Room No</th>
+                    <td>{{complaint.booking.room.room_no}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Complaint Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Complaint ID</th>
+                    <td>{{complaint.complaint_id}}</td>
+                    <th>Status</th>
+                    <td>{{complaint.complaint_status}}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td colspan="3">{{complaint.complaint_datetime}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Complaint Description</h2>
+            <table class="booking-table">
+                <tr>
+                    <td>{{complaint.complaint_text}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Resolution</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Resolution Details</th>
+                    <td>
+                        {% if complaint.resolution_details %}
+                        {{complaint.resolution_details}}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <div class="form-actions">
+            {% if complaint.complaint_status!="RESOLVED" %}
+            <a class="primary-button"
+                href="{{url_for('resolve_complaint',complaint_id=complaint.complaint_id)}}">Resolve Complaint</a>
+            {% endif %}
+            <a class="primary-button" href="{{url_for('manage_complaints')}}">Back to Complaints</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

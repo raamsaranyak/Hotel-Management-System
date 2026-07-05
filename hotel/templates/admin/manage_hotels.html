@@ -1,0 +1,111 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Hotels
+{% endblock %}
+{% block admin_title %}Hotels{% endblock %}
+{% block admin_subtitle %}Manage hotel branches and properties{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="list-toolbar">
+        <form method="GET" class="list-toolbar-form">
+            <div class="list-toolbar-row">
+                <div class="list-search">
+                    <input class="form-input" type="text" name="search" placeholder="Search by name, branch or location..." value="{{search}}">
+                    <input class="primary-button" type="submit" value="Search">
+                </div>
+                <div class="list-toolbar-right">
+                    <select class="form-input" name="sort" onchange="this.form.submit()">
+                        <option value="hotel_id" {% if selected_sort=="hotel_id" %}selected{% endif %}>ID</option>
+                        <option value="hotel_name" {% if selected_sort=="hotel_name" %}selected{% endif %}>Name</option>
+                        <option value="branch_name" {% if selected_sort=="branch_name" %}selected{% endif %}>Branch</option>
+                        <option value="location" {% if selected_sort=="location" %}selected{% endif %}>Location</option>
+                    </select>
+                    <select class="form-input" name="order" onchange="this.form.submit()">
+                        <option value="asc" {% if selected_order=="asc" %}selected{% endif %}>Asc</option>
+                        <option value="desc" {% if selected_order=="desc" %}selected{% endif %}>Desc</option>
+                    </select>
+                    <a class="primary-button" href="{{url_for('add_hotel')}}">+ Add Hotel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="list-card">
+        {% if hotels.items %}
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Hotel Name</th>
+                    <th>Branch</th>
+                    <th>Location</th>
+                    <th>Floors</th>
+                    <th>Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hotel in hotels.items %}
+                <tr>
+                    <td>{{hotel.hotel_id}}</td>
+                    <td><strong>{{hotel.hotel_name}}</strong></td>
+                    <td>{{hotel.branch_name}}</td>
+                    <td>{{hotel.location}}</td>
+                    <td>{{hotel.number_of_floors}}</td>
+                    <td>{{hotel.contact_number}}</td>
+                    <td>
+                        <div class="actions-cell">
+                            <a class="table-action" href="{{url_for('edit_hotel',hotel_id=hotel.hotel_id)}}">Edit</a>
+                            <a class="table-action" href="{{url_for('manage_hotels',hotel_id=hotel.hotel_id,page=hotels.page,search=search,sort=selected_sort,order=selected_order)}}">Details</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {% if hotels.has_prev %}
+            <a href="{{url_for('manage_hotels',page=hotels.prev_num,search=search,sort=selected_sort,order=selected_order)}}">&#8592; Previous</a>
+            {% endif %}
+            <span>Page {{hotels.page}} of {{hotels.pages}}</span>
+            {% if hotels.has_next %}
+            <a href="{{url_for('manage_hotels',page=hotels.next_num,search=search,sort=selected_sort,order=selected_order)}}">Next &#8594;</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="list-empty">
+            <h3>No Hotels Found</h3>
+            <p>Try adjusting your search or <a href="{{url_for('add_hotel')}}">add a new hotel</a>.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if drawer_open and selected_hotel %}
+    <div class="list-card">
+        <div class="drawer-header">
+            <h3>Hotel Details &mdash; {{selected_hotel.hotel_name}}</h3>
+            <a class="table-action" href="{{url_for('manage_hotels',page=hotels.page,search=search,sort=selected_sort,order=selected_order)}}">&#10005; Close</a>
+        </div>
+        <table class="booking-table details-table">
+            <tbody>
+                <tr><th>ID</th><td>{{selected_hotel.hotel_id}}</td></tr>
+                <tr><th>Name</th><td>{{selected_hotel.hotel_name}}</td></tr>
+                <tr><th>Branch</th><td>{{selected_hotel.branch_name}}</td></tr>
+                <tr><th>Location</th><td>{{selected_hotel.location}}</td></tr>
+                <tr><th>Contact</th><td>{{selected_hotel.contact_number}}</td></tr>
+                <tr><th>Email</th><td>{{selected_hotel.email}}</td></tr>
+                <tr><th>Floors</th><td>{{selected_hotel.number_of_floors}}</td></tr>
+                <tr><th>Rooms</th><td>{{selected_hotel.rooms|length}}</td></tr>
+                <tr><th>Created</th><td>{{selected_hotel.created_at}}</td></tr>
+                <tr><th>Updated</th><td>{{selected_hotel.updated_at}}</td></tr>
+            </tbody>
+        </table>
+        <div class="drawer-actions">
+            <a class="primary-button" href="{{url_for('hotel_profile',hotel_id=selected_hotel.hotel_id)}}">View Full Profile</a>
+            <a class="primary-button" href="{{url_for('edit_hotel',hotel_id=selected_hotel.hotel_id)}}">Edit Hotel</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

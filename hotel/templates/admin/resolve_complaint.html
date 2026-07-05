@@ -1,0 +1,51 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Resolve Complaint
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Resolve Complaint</h1>
+        <section class="admin-section">
+            <h2>Complaint Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Complaint ID</th>
+                    <td>{{complaint.complaint_id}}</td>
+                    <th>Customer</th>
+                    <td>{{complaint.user.customer_details.customer_name}}</td>
+                </tr>
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{complaint.booking.booking_id}}</td>
+                    <th>Status</th>
+                    <td>{{complaint.complaint_status}}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td colspan="3">{{complaint.complaint_datetime}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Complaint</h2>
+            <table class="booking-table">
+                <tr>
+                    <td>{{complaint.complaint_text}}</td>
+                </tr>
+            </table>
+        </section>
+        <form method="POST">
+            <div class="form-field">
+                <label class="form-label">Resolution Details</label>
+                <textarea class="form-input" name="resolution_details" rows="8" required></textarea>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Resolve Complaint">
+                <a class="primary-button"
+                    href="{{url_for('manage_complaint',complaint_id=complaint.complaint_id)}}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

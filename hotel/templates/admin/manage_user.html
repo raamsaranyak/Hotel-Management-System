@@ -1,0 +1,107 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}{% if user.role=="admin" %}Admin Profile{% else %}User Profile{% endif %}{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">{% if user.role=="admin" %}Admin Profile{% else %}User Profile{% endif %}</h1>
+        <section class="admin-section">
+            <h2>Account Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>User ID</th>
+                    <td>{{user.user_id}}</td>
+                    <th>Username</th>
+                    <td>{{user.username}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{user.email}}</td>
+                    <th>Role</th>
+                    <td>{{user.role}}</td>
+                </tr>
+                <tr>
+                    <th>Account Status</th>
+                    <td>{{user.account_status}}</td>
+                    <th>Created On</th>
+                    <td>{{user.created_date_time}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>{% if user.role=="admin" %}Admin{% else %}Customer{% endif %} Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Name</th>
+                    <td>{% if user.customer_details %}{{user.customer_details.customer_name}}{% else %}-{% endif %}</td>
+                    <th>Gender</th>
+                    <td>{% if user.customer_details %}{{user.customer_details.gender}}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Date Of Birth</th>
+                    <td>{% if user.customer_details %}{{user.customer_details.date_of_birth}}{% else %}-{% endif %}</td>
+                    <th>Contact Number</th>
+                    <td>{% if user.customer_details %}{{user.customer_details.contact_number}}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td colspan="3">{% if user.customer_details %}{{user.customer_details.address}}{% else %}-{% endif %}</td>
+                </tr>
+            </table>
+        </section>
+        {% if user.role!="admin" %}
+        <section class="admin-section">
+            <h2>Statistics</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Total Bookings</th>
+                    <td>{{total_bookings}}</td>
+                    <th>Active Bookings</th>
+                    <td>{{active_bookings}}</td>
+                </tr>
+                <tr>
+                    <th>Completed Bookings</th>
+                    <td>{{completed_bookings}}</td>
+                    <th>Cancelled Bookings</th>
+                    <td>{{cancelled_bookings}}</td>
+                </tr>
+                <tr>
+                    <th>Reviews</th>
+                    <td>{{total_reviews}}</td>
+                    <th>Complaints</th>
+                    <td>{{total_complaints}}</td>
+                </tr>
+                <tr>
+                    <th>Payments</th>
+                    <td>{{total_payments}}</td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </section>
+        {% endif %}
+        <div class="form-actions">
+            {% if user.role=="admin" %}
+                {% if user.user_id!=current_user.user_id %}
+                <form method="POST" action="{{url_for('demote_admin',user_id=user.user_id)}}">
+                    <input class="primary-button" type="submit" value="Demote to Customer" onclick="return confirm('Are you sure you want to demote this admin to customer?');">
+                </form>
+                {% endif %}
+                <a class="primary-button" href="{{url_for('manage_admins')}}">Back To Admins</a>
+            {% else %}
+                {% if user.account_status=="BLOCKED" %}
+                <form method="POST" action="{{url_for('unblock_user',user_id=user.user_id)}}">
+                    <input class="primary-button" type="submit" value="Unblock User">
+                </form>
+                {% else %}
+                <form method="POST" action="{{url_for('block_user',user_id=user.user_id)}}">
+                    <input class="primary-button" type="submit" value="Block User">
+                </form>
+                <form method="POST" action="{{url_for('make_admin',user_id=user.user_id)}}">
+                    <input class="primary-button" type="submit" value="Make Admin">
+                </form>
+                {% endif %}
+                <a class="primary-button" href="{{url_for('manage_users')}}">Back To Users</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

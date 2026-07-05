@@ -1,0 +1,95 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Booking History
+{% endblock %}
+{% block content %}
+<div class="booking-page">
+    <div class="booking-card">
+        <h1 class="booking-heading">Booking History</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label" for="search">Search Booking</label>
+                <input class="form-input" type="text" id="search" name="search" value="{{search}}"
+                    placeholder="Search ID or Room No...">
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="booking_status">Status</label>
+                <select class="form-input" id="booking_status" name="booking_status">
+                    <option value="ALL" {% if selected_status=="ALL" %}selected{% endif %}>All Bookings</option>
+                    <option value="BOOKED" {% if selected_status=="BOOKED" %}selected{% endif %}>Booked</option>
+                    <option value="CHECKED_IN" {% if selected_status=="CHECKED_IN" %}selected{% endif %}>Checked In
+                    </option>
+                    <option value="CHECKED_OUT" {% if selected_status=="CHECKED_OUT" %}selected{% endif %}>Completed
+                    </option>
+                    <option value="CANCELLED" {% if selected_status=="CANCELLED" %}selected{% endif %}>Cancelled
+                    </option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="sort_by">Sort By</label>
+                <select class="form-input" id="sort_by" name="sort_by">
+                    <option value="booking_date_time" {% if selected_sort=="booking_date_time" %}selected{% endif %}>
+                        Booking Date</option>
+                    <option value="check_in_date" {% if selected_sort=="check_in_date" %}selected{% endif %}>Check-In
+                        Date</option>
+                    <option value="price_at_booking" {% if selected_sort=="price_at_booking" %}selected{% endif %}>Price
+                    </option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="direction">Order</label>
+                <select class="form-input" id="direction" name="direction">
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply Filters">
+                <a href="{{url_for('home')}}">
+                    <button class="primary-button" type="button">
+                        Return Home
+                    </button>
+                </a>
+            </div>
+        </form>
+        {% if bookings.items %}
+        {% for booking in bookings.items %}
+        <div class="booking-history-card">
+            <h2>{{booking.hotel.hotel_name}}</h2>
+            <p><strong>Branch:</strong> {{booking.hotel.branch_name}}</p>
+            <p><strong>Location:</strong> {{booking.hotel.location}}</p>
+            <p><strong>Booking ID:</strong> {{booking.booking_id}}</p>
+            <p><strong>Booked On:</strong> {{booking.booking_date_time}}</p>
+            <p><strong>Room No:</strong> {{booking.room.room_no}}</p>
+            <p><strong>Category:</strong> {{booking.room.category}}</p>
+            <p><strong>Guests:</strong> {{booking.number_of_people}}</p>
+            <p><strong>Total Amount:</strong> ₹ {{booking.price_at_booking}}</p>
+            <p><strong>Check-In:</strong> {{booking.check_in_date}}</p>
+            <p><strong>Check-Out:</strong> {{booking.check_out_date}}</p>
+            <p><strong>Status:</strong> {{booking.booking_status}}</p>
+            {% if booking.actual_check_in_datetime %}
+            <p><strong>Checked In At:</strong> {{booking.actual_check_in_datetime}}</p>
+            {% endif %}
+            {% if booking.actual_check_out_datetime %}
+            <p><strong>Checked Out At:</strong> {{booking.actual_check_out_datetime}}</p>
+            {% endif %}
+            <div class="form-actions">
+                {% if booking.booking_status=="BOOKED" %}
+                <a class="primary-button" href="{{url_for('cancel_booking',booking_id=booking.booking_id)}}" onclick="return confirm('Are you sure you want to cancel this booking? This action cannot be undone.');">Cancel
+                    Booking</a>
+                {% endif %}
+                {% if booking.booking_status=="CHECKED_OUT" %}
+                <a class="primary-button" href="{{url_for('submit_complaint',booking_id=booking.booking_id)}}">Submit
+                    Complaint</a>
+                {% endif %}
+                {#<a class="primary-button" href="{{url_for('invoice',booking_id=booking.booking_id)}}">View
+                    Invoice</a>#}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2>No Bookings Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

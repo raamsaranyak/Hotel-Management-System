@@ -1,0 +1,45 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Contact Message Profile
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Contact Message Profile</h1>
+        <section class="admin-section">
+            <h2>Message Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Message ID</th>
+                    <td>{{message.message_id}}</td>
+                    <th>Date</th>
+                    <td>{{message.date_time}}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{message.name}}</td>
+                    <th>Email</th>
+                    <td>{{message.email}}</td>
+                </tr>
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{message.contact_number}}</td>
+                    <th></th>
+                    <td></td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Message</h2>
+            <table class="booking-table">
+                <tr>
+                    <td>{{message.message}}</td>
+                </tr>
+            </table>
+        </section>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('manage_contact_messages')}}">Back to Contact Messages</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

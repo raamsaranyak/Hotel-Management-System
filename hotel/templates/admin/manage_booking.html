@@ -1,0 +1,268 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Booking
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Manage Booking</h1>
+        <section class="admin-section">
+            <h2>Booking Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{booking.booking_id}}</td>
+                    <th>Status</th>
+                    <td>{{booking.booking_status}}</td>
+                </tr>
+                <tr>
+                    <th>Booking Date</th>
+                    <td>{{booking.booking_date_time}}</td>
+                    <th>Price At Booking</th>
+                    <td>₹ {{booking.price_at_booking}}</td>
+                </tr>
+            </table>
+        </section>
+        {% if booking.user %}
+        <section class="admin-section">
+            <h2>Customer Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Customer Name</th>
+                    <td>
+                        <a href="{{url_for('manage_user',user_id=booking.user.user_id)}}">
+                            {{booking.user.customer_details.customer_name}}
+                        </a>
+                    </td>
+                    <th>Username</th>
+                    <td>{{booking.user.username}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{booking.user.email}}</td>
+                    <th>Contact Number</th>
+                    <td>{{booking.user.customer_details.contact_number}}</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{booking.user.customer_details.gender}}</td>
+                    <th>Date Of Birth</th>
+                    <td>{{booking.user.customer_details.date_of_birth}}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td colspan="3">{{booking.user.customer_details.address}}</td>
+                </tr>
+            </table>
+        </section>
+        {% else %}
+        <section class="admin-section">
+            <h2>Guest Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Guest Name</th>
+                    <td>{{guest.guest_name}}</td>
+                    <th>Gender</th>
+                    <td>{{guest.gender}}</td>
+                </tr>
+                <tr>
+                    <th>Age</th>
+                    <td>{{guest.age}}</td>
+                    <th>Contact Number</th>
+                    <td>{{guest.contact_number}}</td>
+                </tr>
+                <tr>
+                    <th>Number Of People</th>
+                    <td colspan="3">{{guest.number_of_people}}</td>
+                </tr>
+            </table>
+        </section>
+        {% endif %}
+        <section class="admin-section">
+            <h2>Hotel Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{booking.hotel.hotel_name}}</td>
+                    <th>Branch</th>
+                    <td>{{booking.hotel.branch_name}}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{booking.hotel.location}}</td>
+                    <th>Contact Number</th>
+                    <td>{{booking.hotel.contact_number}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td colspan="3">{{booking.hotel.email}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Room Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Room Number</th>
+                    <td>{{booking.room.room_no}}</td>
+                    <th>Category</th>
+                    <td>{{booking.room.category}}</td>
+                </tr>
+                <tr>
+                    <th>Beds</th>
+                    <td>{{booking.room.beds}}</td>
+                    <th>Capacity</th>
+                    <td>{{booking.room.capacity}}</td>
+                </tr>
+                <tr>
+                    <th>Floor</th>
+                    <td>{{booking.room.floor}}</td>
+                    <th>Room Status</th>
+                    <td>{{booking.room.room_status}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Stay Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Check In Date</th>
+                    <td>{{booking.check_in_date}}</td>
+                    <th>Check Out Date</th>
+                    <td>{{booking.check_out_date}}</td>
+                </tr>
+                <tr>
+                    <th>Actual Check In</th>
+                    <td>{{booking.actual_check_in_datetime or "-"}}</td>
+                    <th>Actual Check Out</th>
+                    <td>{{booking.actual_check_out_datetime or "-"}}</td>
+                </tr>
+                <tr>
+                    <th>Total Nights</th>
+                    <td>{{(booking.check_out_date-booking.check_in_date).days}}</td>
+                    <th>Guests</th>
+                    <td>{{booking.number_of_people}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section">
+            <h2>Payment Details</h2>
+            {% if payment %}
+            <table class="booking-table">
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{payment.transaction_id}}</td>
+                    <th>Receipt Number</th>
+                    <td>{{payment.receipt_number}}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Date</th>
+                    <td>{{payment.transaction_date_time}}</td>
+                    <th>Payment Method</th>
+                    <td>{{payment.payment_method}}</td>
+                </tr>
+                <tr>
+                    <th>Payment Status</th>
+                    <td>{{payment.payment_status}}</td>
+                    <th>Amount Paid</th>
+                    <td>₹ {{payment.amount}}</td>
+                </tr>
+            </table>
+            {% else %}
+            <p>No Payment Details Available.</p>
+            {% endif %}
+        </section>
+        <section class="admin-section">
+            <h2>Invoice Details</h2>
+            {% if invoice %}
+            <table class="booking-table">
+                <tr>
+                    <th>Invoice ID</th>
+                    <td>{{invoice.invoice_id}}</td>
+                    <th>Invoice Date</th>
+                    <td>{{invoice.invoice_date}}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{invoice.transaction_id}}</td>
+                    <th>Tax Amount</th>
+                    <td>₹ {{invoice.tax_amount}}</td>
+                </tr>
+                <tr>
+                    <th>Discount Amount</th>
+                    <td>₹ {{invoice.discount_amount}}</td>
+                    <th>Final Amount</th>
+                    <td>₹ {{invoice.final_amount}}</td>
+                </tr>
+            </table>
+            {% else %}
+            <p>Invoice Not Generated.</p>
+            {% endif %}
+        </section>
+        <section class="admin-section">
+            <h2>Admin Actions</h2>
+            <div class="form-actions">
+                {% if booking.booking_status=="BOOKED" %}
+                <a class="primary-button" href="{{url_for('check_in_customer',booking_id=booking.booking_id)}}">Check In</a>
+                <a class="primary-button" href="{{url_for('edit_booking',booking_id=booking.booking_id)}}">Edit Dates/Room</a>
+                <a class="primary-button" href="{{url_for('admin_cancel_booking',booking_id=booking.booking_id)}}" onclick="return confirm('Are you sure you want to cancel this booking? This action cannot be undone.');">Cancel Booking</a>
+                {% if guest %}
+                <a class="primary-button" href="{{url_for('update_guest',guest_id=guest.guest_id)}}">Update Guest</a>
+                {% endif %}
+                {% elif booking.booking_status=="CHECKED_IN" %}
+                <a class="primary-button" href="{{url_for('check_out_customer',booking_id=booking.booking_id)}}">Check Out</a>
+                {% endif %}
+                <a class="primary-button" href="{{url_for('manage_bookings')}}">Back To Manage Bookings</a>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% if edit_mode %}
+<div class="admin-card" style="margin-top:20px;">
+    <h1 class="admin-heading">Edit Booking #{{booking.booking_id}}</h1>
+    <div class="form-actions">
+        <a class="primary-button" href="{{url_for('manage_booking',booking_id=booking.booking_id)}}">← Cancel Editing</a>
+    </div>
+    <section class="admin-section">
+        <h2>Modify Booking</h2>
+        <form method="POST" action="{{url_for('edit_booking',booking_id=booking.booking_id)}}" style="display:flex;flex-direction:column;gap:16px;max-width:600px;">
+            <div class="form-field">
+                <label class="form-label" for="check_in_date">Check In Date</label>
+                <input class="form-input" type="date" id="check_in_date" name="check_in_date"
+                    value="{{booking.check_in_date}}" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="check_out_date">Check Out Date</label>
+                <input class="form-input" type="date" id="check_out_date" name="check_out_date"
+                    value="{{booking.check_out_date}}" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="number_of_people">Number of People</label>
+                <input class="form-input" type="number" id="number_of_people" name="number_of_people"
+                    value="{{booking.number_of_people}}" min="1" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="room_id">Assign Room</label>
+                <select class="form-input" id="room_id" name="room_id" required>
+                    {% for room in rooms %}
+                    <option value="{{room.room_id}}" {% if room.room_id==booking.room_id %}selected{% endif %}>
+                        Room {{room.room_no}} &mdash; {{room.category}} &mdash; {{room.beds}} &mdash; Rs.{{room.current_price}}/night {% if room.room_id!=booking.room_id %}({{room.room_status}}){% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-field" style="background:#fafafa;border:2px solid #eee;border-radius:8px;padding:14px;">
+                <p style="font-size:13px;color:#666;">
+                    <strong>Note:</strong> The price will be recalculated based on the selected room's current price and the number of nights. Payment and invoice amounts will be updated accordingly.
+                </p>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Update Booking">
+                <a class="primary-button" href="{{url_for('manage_booking',booking_id=booking.booking_id)}}">Cancel</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endif %}
+{% endblock %}

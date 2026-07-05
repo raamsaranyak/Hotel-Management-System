@@ -1,0 +1,112 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Reviews
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Manage Reviews</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label">Search</label>
+                <input class="form-input" type="text" name="search"
+                    placeholder="Search Review ID, Booking ID or Customer Name" value="{{search}}">
+            </div>
+            <div class="form-field">
+                <label class="form-label">Rating</label>
+                <select class="form-input" name="rating">
+                    <option value="ALL" {% if selected_rating=="ALL" %}selected{% endif %}>All Ratings</option>
+                    <option value="5" {% if selected_rating=="5" %}selected{% endif %}>5 Stars</option>
+                    <option value="4" {% if selected_rating=="4" %}selected{% endif %}>4 Stars</option>
+                    <option value="3" {% if selected_rating=="3" %}selected{% endif %}>3 Stars</option>
+                    <option value="2" {% if selected_rating=="2" %}selected{% endif %}>2 Stars</option>
+                    <option value="1" {% if selected_rating=="1" %}selected{% endif %}>1 Star</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Visibility</label>
+                <select class="form-input" name="visibility">
+                    <option value="ALL" {% if selected_visibility=="ALL" %}selected{% endif %}>All Reviews</option>
+                    <option value="VISIBLE" {% if selected_visibility=="VISIBLE" %}selected{% endif %}>Visible</option>
+                    <option value="HIDDEN" {% if selected_visibility=="HIDDEN" %}selected{% endif %}>Hidden</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Sort By</label>
+                <select class="form-input" name="sort_by">
+                    <option value="review_datetime" {% if selected_sort=="review_datetime" %}selected{% endif %}>Review
+                        Date</option>
+                    <option value="rating" {% if selected_sort=="rating" %}selected{% endif %}>Rating</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Order</label>
+                <select class="form-input" name="direction">
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply">
+            </div>
+        </form>
+        {% if reviews.items %}
+        <table class="booking-table">
+            <tr>
+                <th>Review ID</th>
+                <th>Customer</th>
+                <th>Booking</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th>Date</th>
+                <th>Visibility</th>
+                <th>Action</th>
+            </tr>
+            {% for review in reviews.items %}
+            <tr>
+                <td>{{review.review_id}}</td>
+                <td><a
+                        href="{{url_for('manage_user',user_id=review.user.user_id)}}">{{review.user.customer_details.customer_name}}</a>
+                </td>
+                <td><a href="{{url_for('manage_booking',booking_id=review.booking_id)}}">{{review.booking_id}}</a></td>
+                <td>{{review.rating}}</td>
+                <td>
+                    {% if review.review_text %}
+                    {{review.review_text}}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>{{review.review_datetime}}</td>
+                <td>{{review.review_visibility}}</td>
+                <td>
+                    {% if review.review_visibility=="VISIBLE" %}
+                    <form method="POST" action="{{url_for('hide_review',review_id=review.review_id)}}">
+                        <input class="primary-button" type="submit" value="Hide">
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{{url_for('show_review',review_id=review.review_id)}}">
+                        <input class="primary-button" type="submit" value="Show">
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="pagination">
+            {% if reviews.has_prev %}
+            <a class="primary-button"
+                href="{{url_for('manage_reviews',page=reviews.prev_num,search=search,rating=selected_rating,visibility=selected_visibility,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+            {% endif %}
+            <span>Page {{reviews.page}} of {{reviews.pages}}</span>
+            {% if reviews.has_next %}
+            <a class="primary-button"
+                href="{{url_for('manage_reviews',page=reviews.next_num,search=search,rating=selected_rating,visibility=selected_visibility,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <h2>No Reviews Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

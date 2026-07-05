@@ -1,0 +1,136 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Book Hotel
+{% endblock %}
+{% block content %}
+<div class="booking-page">
+    <div class="booking-card">
+        {% if not hotels %}
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.check_in_date.label(class="form-label")}}
+                {{form.check_in_date(class="form-input",min=min_date,max=max_date,required=True)}}
+                {% for error in form.check_in_date.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.check_out_date.label(class="form-label")}}
+                {{form.check_out_date(class="form-input",min=min_date,max=max_date,required=True)}}
+                {% for error in form.check_out_date.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.number_of_people.label(class="form-label")}}
+                {{form.number_of_people(class="form-input",required=True)}}
+                {% for error in form.number_of_people.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.category.label(class="form-label")}}
+                {{form.category(class="form-input")}}
+                {% for error in form.category.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button")}}
+            </div>
+        </form>
+        {% else %}
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.check_in_date.label(class="form-label")}}
+                {{form.check_in_date(class="form-input",min=min_date,max=max_date,required=True)}}
+                {% for error in form.check_in_date.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.check_out_date.label(class="form-label")}}
+                {{form.check_out_date(class="form-input",min=min_date,max=max_date,required=True)}}
+                {% for error in form.check_out_date.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            {{form.number_of_people(type="hidden")}}
+            <div class="form-field">
+                {{form.category.label(class="form-label")}}
+                {{form.category(class="form-input")}}
+                {% for error in form.category.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Modify Search">
+            </div>
+        </form>
+        <hr>
+        <div class="rooms-layout" style="gap:24px;">
+            <div class="rooms-grid" style="flex:1;">
+                {% for hotel in hotels %}
+                <div class="hotel-card">
+                    <a href="{{url_for('hotel_rooms',hotel_id=hotel.hotel_id,category=selected_category if selected_category!='ALL' else '')}}">
+                        <h3>{{hotel.hotel_name}}</h3>
+                        <p>{{hotel.location}}</p>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <aside class="rooms-filters">
+                <div class="rooms-filter-header">
+                    <h2>Filters</h2>
+                    <a href="{{url_for('book',category='')}}">Clear All</a>
+                </div>
+                <form method="GET" action="{{url_for('book')}}">
+                    <input type="hidden" name="category" value="{% if selected_category!='ALL' %}{{selected_category}}{% endif %}">
+                    <div class="filter-fields">
+                        <div class="form-field">
+                            <label class="form-label" for="min_price">Min Price</label>
+                            <input class="form-input" type="number" id="min_price" name="min_price" value="{{min_price}}" placeholder="&#8377; 0">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="max_price">Max Price</label>
+                            <input class="form-input" type="number" id="max_price" name="max_price" value="{{max_price}}" placeholder="&#8377; 10000+">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="beds">Beds</label>
+                            <select class="form-input" id="beds" name="beds">
+                                <option value="" {% if selected_beds=="Any" %}selected{% endif %}>Any</option>
+                                <option value="1 Single" {% if selected_beds=="1 Single" %}selected{% endif %}>1 Single</option>
+                                <option value="1 Double" {% if selected_beds=="1 Double" %}selected{% endif %}>1 Double</option>
+                                <option value="1 Queen" {% if selected_beds=="1 Queen" %}selected{% endif %}>1 Queen</option>
+                                <option value="2 Queen" {% if selected_beds=="2 Queen" %}selected{% endif %}>2 Queen</option>
+                                <option value="1 King" {% if selected_beds=="1 King" %}selected{% endif %}>1 King</option>
+                                <option value="2 King" {% if selected_beds=="2 King" %}selected{% endif %}>2 King</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="sort_by">Sort By</label>
+                            <select class="form-input" id="sort_by" name="sort_by">
+                                <option value="name" {% if selected_sort=="name" %}selected{% endif %}>Hotel Name</option>
+                                <option value="price" {% if selected_sort=="price" %}selected{% endif %}>Price</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="direction">Order</label>
+                            <select class="form-input" id="direction" name="direction">
+                                <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Low to High</option>
+                                <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <input class="primary-button" type="submit" value="Apply">
+                    </div>
+                </form>
+            </aside>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

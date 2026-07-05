@@ -1,0 +1,179 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Booking Confirmation
+{% endblock %}
+{% block content %}
+<div class="booking-page">
+    <div class="booking-card">
+        <h1 class="booking-heading">Booking Confirmed ✓</h1>
+        <p>Your booking has been confirmed successfully. A payment receipt and invoice have been generated.</p>
+        <section class="booking-section">
+            <h2>Booking Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{booking.booking_id}}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{booking.booking_status}}</td>
+                </tr>
+                <tr>
+                    <th>Booking Date</th>
+                    <td>{{booking.booking_date_time}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Hotel Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{booking.hotel.hotel_name}}</td>
+                </tr>
+                <tr>
+                    <th>Branch</th>
+                    <td>{{booking.hotel.branch_name}}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{booking.hotel.location}}</td>
+                </tr>
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{booking.hotel.contact_number}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Room Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Room Number</th>
+                    <td>{{booking.room.room_no}}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{booking.room.category}}</td>
+                </tr>
+                <tr>
+                    <th>Beds</th>
+                    <td>{{booking.room.beds}}</td>
+                </tr>
+                <tr>
+                    <th>Floor</th>
+                    <td>{{booking.room.floor}}</td>
+                </tr>
+                <tr>
+                    <th>Capacity</th>
+                    <td>{{booking.room.capacity}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Stay Details</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Check In</th>
+                    <td>{{booking.check_in_date}}</td>
+                </tr>
+                <tr>
+                    <th>Check Out</th>
+                    <td>{{booking.check_out_date}}</td>
+                </tr>
+                <tr>
+                    <th>Guests</th>
+                    <td>{{booking.number_of_people}}</td>
+                </tr>
+                <tr>
+                    <th>Actual Check In</th>
+                    <td>{{booking.actual_check_in_datetime or "-"}}</td>
+                </tr>
+                <tr>
+                    <th>Actual Check Out</th>
+                    <td>{{booking.actual_check_out_datetime or "-"}}</td>
+                </tr>
+                <tr>
+                    <th>Total Nights</th>
+                    <td>{{(booking.check_out_date-booking.check_in_date).days}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="booking-section">
+            <h2>Payment Details</h2>
+            {% if payment %}
+            <table class="booking-table">
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{payment.transaction_id}}</td>
+                </tr>
+                <tr>
+                    <th>Receipt Number</th>
+                    <td>{{payment.receipt_number}}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Date</th>
+                    <td>{{payment.transaction_date_time}}</td>
+                </tr>
+                <tr>
+                    <th>Payment Method</th>
+                    <td>{{payment.payment_method}}</td>
+                </tr>
+                <tr>
+                    <th>Payment Status</th>
+                    <td>{{payment.payment_status}}</td>
+                </tr>
+                <tr>
+                    <th>Amount Paid</th>
+                    <td>₹ {{payment.amount}}</td>
+                </tr>
+            </table>
+            {% else %}
+            <p>Payment details are not available.</p>
+            {% endif %}
+        </section>
+        <section class="booking-section">
+            <h2>Invoice Details</h2>
+            {% if invoice %}
+            <table class="booking-table">
+                <tr>
+                    <th>Invoice ID</th>
+                    <td>{{invoice.invoice_id}}</td>
+                </tr>
+                <tr>
+                    <th>Invoice Date</th>
+                    <td>{{invoice.invoice_date}}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{invoice.transaction_id}}</td>
+                </tr>
+                <tr>
+                    <th>Tax Amount</th>
+                    <td>₹ {{invoice.tax_amount}}</td>
+                </tr>
+                <tr>
+                    <th>Discount</th>
+                    <td>₹ {{invoice.discount_amount}}</td>
+                </tr>
+                <tr>
+                    <th>Final Amount</th>
+                    <td>₹ {{invoice.final_amount}}</td>
+                </tr>
+            </table>
+            {% else %}
+            <p>Invoice not generated.</p>
+            {% endif %}
+        </section>
+        <section class="booking-section">
+            <h2>Quick Actions</h2>
+            <p>Invoice download will be available soon.</p>
+            <div class="form-actions">
+                <a class="primary-button" href="{{url_for('booking_history')}}">View My Bookings</a>
+                <a class="primary-button" href="{{url_for('book')}}">Book Another Room</a>
+                <a class="primary-button" href="{{url_for('home')}}">Back To Home</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

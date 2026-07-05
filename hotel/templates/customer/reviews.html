@@ -1,0 +1,128 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Reviews
+{% endblock %}
+{% block content %}
+<div class="customer-page">
+    <div class="customer-card">
+        <h1 class="customer-heading">Customer Testimonials</h1>
+        <p class="customer-heading-sub">We Care About Our Customers Experience Too</p>
+        <a class="view-my-reviews" href="#my-reviews">View My Reviews &rarr;</a>
+
+        <!-- Testimonials Grid -->
+        <section class="customer-section">
+            <div class="review-grid">
+                {% for review in reviews[:6] %}
+                <div class="review-card testimonial-card">
+                    <div class="testimonial-avatar">
+                        {{review.booking.user.customer_details.customer_name[0]|upper}}
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"{{review.review_text}}"</p>
+                        <div class="testimonial-stars">
+                            {% for i in range(review.rating) %}&#9733;{% endfor %}
+                            {% for i in range(5 - review.rating) %}&#9734;{% endfor %}
+                        </div>
+                        <div class="testimonial-author">
+                            <strong>{{review.booking.user.customer_details.customer_name}}</strong>
+                            <span>{{review.booking.hotel.hotel_name}}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Review Statistics -->
+        <section class="customer-section">
+            <div class="review-stats-row">
+                <div class="review-stats-card">
+                    <h3>Rating Breakdown</h3>
+                    <div class="rating-bar-group">
+                        <div class="rating-bar-row"><span class="rating-label">5</span><div class="rating-bar"><div class="rating-bar-fill" style="width:{% if reviews|length > 0 %}{{five_star_count / reviews|length * 100}}{% else %}0{% endif %}%"></div></div><span class="rating-count">{{five_star_count}}</span></div>
+                        <div class="rating-bar-row"><span class="rating-label">4</span><div class="rating-bar"><div class="rating-bar-fill" style="width:{% if reviews|length > 0 %}{{four_star_count / reviews|length * 100}}{% else %}0{% endif %}%"></div></div><span class="rating-count">{{four_star_count}}</span></div>
+                        <div class="rating-bar-row"><span class="rating-label">3</span><div class="rating-bar"><div class="rating-bar-fill" style="width:{% if reviews|length > 0 %}{{three_star_count / reviews|length * 100}}{% else %}0{% endif %}%"></div></div><span class="rating-count">{{three_star_count}}</span></div>
+                        <div class="rating-bar-row"><span class="rating-label">2</span><div class="rating-bar"><div class="rating-bar-fill" style="width:{% if reviews|length > 0 %}{{two_star_count / reviews|length * 100}}{% else %}0{% endif %}%"></div></div><span class="rating-count">{{two_star_count}}</span></div>
+                        <div class="rating-bar-row"><span class="rating-label">1</span><div class="rating-bar"><div class="rating-bar-fill" style="width:{% if reviews|length > 0 %}{{one_star_count / reviews|length * 100}}{% else %}0{% endif %}%"></div></div><span class="rating-count">{{one_star_count}}</span></div>
+                    </div>
+                </div>
+                <div class="review-stats-card average-card">
+                    <h3>Average Rating</h3>
+                    <div class="average-rating-number">{{average_rating}}</div>
+                    <div class="average-stars">
+                        {% if average_rating >= 4.5 %}★★★★★
+                        {% elif average_rating >= 3.5 %}★★★★☆
+                        {% elif average_rating >= 2.5 %}★★★☆☆
+                        {% elif average_rating >= 1.5 %}★★☆☆☆
+                        {% else %}★☆☆☆☆
+                        {% endif %}
+                    </div>
+                    <p class="average-total">{{reviews|length}} review{% if reviews|length != 1 %}s{% endif %}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Reviews + Add Review -->
+        <div class="reviews-layout" id="my-reviews">
+            <section class="customer-section reviews-left">
+                <h2>My Reviews</h2>
+                {% if my_reviews %}
+                <div class="review-grid">
+                    {% for review in my_reviews %}
+                    <div class="review-card">
+                        <div class="review-card-header">
+                            <div class="review-card-avatar">{{review.booking.hotel.hotel_name[0]|upper}}</div>
+                            <div>
+                                <strong>{{review.booking.hotel.hotel_name}}</strong>
+                                <span>Room {{review.booking.room.room_no}} &middot; #{{review.booking.booking_id}}</span>
+                            </div>
+                        </div>
+                        <div class="testimonial-stars" style="margin:8px 0;">
+                            {% for i in range(review.rating) %}&#9733;{% endfor %}
+                            {% for i in range(5 - review.rating) %}&#9734;{% endfor %}
+                        </div>
+                        <p class="review-card-text">{{review.review_text}}</p>
+                        <p class="review-card-date">{{review.review_datetime}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="review-empty">You haven't submitted any reviews yet.</p>
+                {% endif %}
+            </section>
+            <section class="customer-section reviews-right">
+                {% if not my_reviews %}
+                <div class="add-review-card">
+                    <h2>Add Review</h2>
+                    <form method="POST">
+                        {{form.hidden_tag()}}
+                        <div class="form-field">
+                            {{form.rating.label(class="form-label")}}
+                            {{form.rating(class="form-input")}}
+                            {% for error in form.rating.errors %}
+                            <p class="field-error">{{error}}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="form-field">
+                            {{form.review_text.label(class="form-label")}}
+                            {{form.review_text(class="form-input",rows=5,placeholder="Share your experience...")}}
+                            {% for error in form.review_text.errors %}
+                            <p class="field-error">{{error}}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="form-actions">
+                            {{form.submit(class="primary-button")}}
+                        </div>
+                    </form>
+                </div>
+                {% else %}
+                <div class="add-review-card">
+                    <h2>Thank You!</h2>
+                    <p class="review-empty">You have already submitted your review.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

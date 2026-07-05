@@ -1,0 +1,75 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Audit Logs
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Manage Audit Logs</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label">Search</label>
+                <input class="form-input" type="text" name="search" placeholder="Search Log ID, Username, Action, Table"
+                    value="{{search}}">
+            </div>
+            <div class="form-field">
+                <label class="form-label">Sort By</label>
+                <select class="form-input" name="sort_by">
+                    <option value="action_datetime" {% if selected_sort=="action_datetime" %}selected{% endif %}>Action
+                        Date</option>
+                    <option value="username" {% if selected_sort=="username" %}selected{% endif %}>Username</option>
+                    <option value="table_name" {% if selected_sort=="table_name" %}selected{% endif %}>Table Name
+                    </option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Order</label>
+                <select class="form-input" name="direction">
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply">
+            </div>
+        </form>
+        {% if logs.items %}
+        <table class="booking-table">
+            <tr>
+                <th>Log ID</th>
+                <th>Username</th>
+                <th>Action</th>
+                <th>Table</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            {% for log in logs.items %}
+            <tr>
+                <td>{{log.log_id}}</td>
+                <td>{{log.user.username}}</td>
+                <td>{{log.action_performed}}</td>
+                <td>{{log.table_name}}</td>
+                <td>{{log.action_datetime}}</td>
+                <td>
+                    <a class="primary-button" href="{{url_for('audit_log_profile',log_id=log.log_id)}}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="pagination">
+            {% if logs.has_prev %}
+            <a class="primary-button"
+                href="{{url_for('manage_audit_logs',page=logs.prev_num,search=search,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+            {% endif %}
+            <span>Page {{logs.page}} of {{logs.pages}}</span>
+            {% if logs.has_next %}
+            <a class="primary-button"
+                href="{{url_for('manage_audit_logs',page=logs.next_num,search=search,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <h2>No Audit Logs Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

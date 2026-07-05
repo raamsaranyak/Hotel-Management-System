@@ -1,0 +1,67 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Edit Room
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Edit Room</h1>
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                {{form.hotel.label(class="form-label")}}
+                {{form.hotel(class="form-input")}}
+                {% for error in form.hotel.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.room_no.label(class="form-label")}}
+                {{form.room_no(class="form-input")}}
+                {% for error in form.room_no.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.category.label(class="form-label")}}
+                {{form.category(class="form-input")}}
+                {% for error in form.category.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.capacity.label(class="form-label")}}
+                {{form.capacity(class="form-input")}}
+                {% for error in form.capacity.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.beds.label(class="form-label")}}
+                {{form.beds(class="form-input")}}
+                {% for error in form.beds.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.current_price.label(class="form-label")}}
+                {{form.current_price(class="form-input")}}
+                {% for error in form.current_price.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.floor.label(class="form-label")}}
+                {{form.floor(class="form-input")}}
+                {% for error in form.floor.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Update Room">
+                <a class="primary-button" href="{{url_for('manage_rooms')}}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

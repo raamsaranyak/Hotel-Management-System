@@ -1,0 +1,58 @@
+{% extends "layouts/base_layout.html" %}
+{% block title %}
+Profile
+{% endblock %}
+{% block content %}
+<div class="customer-page">
+    <div class="customer-card">
+        <h1 class="customer-heading">My Profile</h1>
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-field">
+                <label class="form-label">Username</label>
+                <p>{{current_user.username}}</p>
+            </div>
+            <div class="form-field">
+                {{form.email.label(class="form-label")}}
+                {{form.email(class="form-input")}}
+                {% for error in form.email.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.customer_name.label(class="form-label")}}
+                {{form.customer_name(class="form-input")}}
+                {% for error in form.customer_name.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                <label class="form-label">Gender</label>
+                <p>{{current_user.customer_details.gender}}</p>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Date of Birth</label>
+                <p>{{current_user.customer_details.date_of_birth}}</p>
+            </div>
+            <div class="form-field">
+                {{form.contact_number.label(class="form-label")}}
+                {{form.contact_number(class="form-input")}}
+                {% for error in form.contact_number.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{form.address.label(class="form-label")}}
+                {{form.address(class="form-input")}}
+                {% for error in form.address.errors %}
+                <p class="field-error">{{error}}</p>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{form.submit(class="primary-button")}}
+                <a class="primary-button" href="{{url_for('home')}}">Return Home</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

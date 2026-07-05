@@ -1,0 +1,209 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Room Profile
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Room Profile</h1>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('manage_rooms')}}">← Back to Manage Rooms</a>
+            <a class="primary-button" href="{{url_for('edit_room',room_id=room.room_id)}}">Edit Room</a>
+        </div>
+        <section class="admin-section" id="basic-info">
+            <h2>Basic Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Room ID</th>
+                    <td>{{room.room_id}}</td>
+                    <th>Room Number</th>
+                    <td>{{room.room_no}}</td>
+                </tr>
+                <tr>
+                    <th>Hotel</th>
+                    <td>{{room.hotel.hotel_name}}</td>
+                    <th>Category</th>
+                    <td>{{room.category}}</td>
+                </tr>
+                <tr>
+                    <th>Capacity</th>
+                    <td>{{room.capacity}}</td>
+                    <th>Beds</th>
+                    <td>{{room.beds}}</td>
+                </tr>
+                <tr>
+                    <th>Current Price</th>
+                    <td>{{room.current_price}}</td>
+                    <th>Floor</th>
+                    <td>{{room.floor}}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td colspan="3">{{room.room_status}}</td>
+                </tr>
+            </table>
+        </section>
+        <section class="admin-section" id="current-stay">
+            <h2>Current Stay</h2>
+            {% if current_booking %}
+            <table class="booking-table">
+                <tr>
+                    <th>Guest Name</th>
+                    <td>{% if current_booking.user %}{{current_booking.user.customer_details.customer_name}}{% elif
+                        current_booking.guests %}{{current_booking.guests[0].guest_name}}{% else %}Guest{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Booking ID</th>
+                    <td>{{current_booking.booking_id}}</td>
+                </tr>
+                <tr>
+                    <th>Check In</th>
+                    <td>{{current_booking.check_in_date}}</td>
+                </tr>
+                <tr>
+                    <th>Check Out</th>
+                    <td>{{current_booking.check_out_date}}</td>
+                </tr>
+                <tr>
+                    <th>People</th>
+                    <td>{{current_booking.number_of_people}}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{current_booking.booking_status}}</td>
+                </tr>
+            </table>
+            {% else %}
+            <p>No Active Booking</p>
+            {% endif %}
+        </section>
+        <section class="admin-section" id="booking-history">
+            <h2>Booking History</h2>
+            <form method="GET">
+                <input type="hidden" name="room_id" value="{{room.room_id}}">
+                <div class="form-field">
+                    <label class="form-label">Status</label>
+                    <select class="form-input" name="booking_status">
+                        <option value="ALL" {% if selected_status=="ALL" %}selected{% endif %}>All Bookings</option>
+                        <option value="BOOKED" {% if selected_status=="BOOKED" %}selected{% endif %}>Booked</option>
+                        <option value="CHECKED_IN" {% if selected_status=="CHECKED_IN" %}selected{% endif %}>Checked In
+                        </option>
+                        <option value="CHECKED_OUT" {% if selected_status=="CHECKED_OUT" %}selected{% endif %}>Checked
+                            Out</option>
+                        <option value="CANCELLED" {% if selected_status=="CANCELLED" %}selected{% endif %}>Cancelled
+                        </option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Search</label>
+                    <input class="form-input" type="text" name="search" value="{{search}}"
+                        placeholder="Booking ID or Customer Name">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Sort By</label>
+                    <select class="form-input" name="sort_by">
+                        <option value="booking_date_time" {% if selected_sort=="booking_date_time" %}selected{% endif
+                            %}>Booking Date</option>
+                        <option value="check_in_date" {% if selected_sort=="check_in_date" %}selected{% endif %}>Check
+                            In Date</option>
+                        <option value="price_at_booking" {% if selected_sort=="price_at_booking" %}selected{% endif %}>
+                            Price</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Order</label>
+                    <select class="form-input" name="direction">
+                        <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                        <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <input class="primary-button" type="submit" value="Apply">
+                </div>
+            </form>
+            {% if bookings.items %}
+            <table class="booking-table">
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Hotel</th>
+                    <th>Room</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>People</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Booking Date</th>
+                </tr>
+                {% for booking in bookings.items %}
+                <tr>
+                    <td>{{booking.booking_id}}</td>
+                    <td>{% if booking.user %}{{booking.user.customer_details.customer_name}}{% elif booking.guests
+                        %}{{booking.guests[0].guest_name}}{% else %}Guest{% endif %}</td>
+                    <td>{{booking.hotel.hotel_name}}</td>
+                    <td>{{booking.room.room_no}}</td>
+                    <td>{{booking.check_in_date}}</td>
+                    <td>{{booking.check_out_date}}</td>
+                    <td>{{booking.number_of_people}}</td>
+                    <td>{{booking.price_at_booking}}</td>
+                    <td>{{booking.booking_status}}</td>
+                    <td>{{booking.booking_date_time}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <div class="pagination">
+                {% if bookings.has_prev %}
+                <a class="primary-button"
+                    href="{{url_for('room_profile',room_id=room.room_id,page=bookings.prev_num,booking_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+                {% endif %}
+                <span>Page {{bookings.page}} of {{bookings.pages}}</span>
+                {% if bookings.has_next %}
+                <a class="primary-button"
+                    href="{{url_for('room_profile',room_id=room.room_id,page=bookings.next_num,booking_status=selected_status,search=search,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <h3>No Booking History Found</h3>
+            {% endif %}
+        </section>
+        <section class="admin-section" id="amenities">
+            <h2>Amenities</h2>
+            {% if amenities %}
+            <table class="booking-table">
+                <tr>
+                    <th>Amenity</th>
+                </tr>
+                {% for item in amenities %}
+                <tr>
+                    <td>{{item.amenity_name}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No Amenities Available</p>
+            {% endif %}
+        </section>
+        <section class="admin-section" id="audit-information">
+            <h2>Audit Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Created At</th>
+                    <td>{{room.created_at}}</td>
+                </tr>
+                <tr>
+                    <th>Created By User ID</th>
+                    <td>{{room.created_by}}</td>
+                </tr>
+                <tr>
+                    <th>Last Updated At</th>
+                    <td>{{room.updated_at}}</td>
+                </tr>
+                <tr>
+                    <th>Last Updated By User ID</th>
+                    <td>{{room.updated_by}}</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</div>
+{% endblock %}

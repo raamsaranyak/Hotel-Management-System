@@ -1,0 +1,37 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Audit Log Profile
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Audit Log Profile</h1>
+        <section class="admin-section">
+            <h2>Audit Log Information</h2>
+            <table class="booking-table">
+                <tr>
+                    <th>Log ID</th>
+                    <td>{{log.log_id}}</td>
+                    <th>Username</th>
+                    <td>{{log.user.username}}</td>
+                </tr>
+                <tr>
+                    <th>Action</th>
+                    <td>{{log.action_performed}}</td>
+                    <th>Table Name</th>
+                    <td>{{log.table_name}}</td>
+                </tr>
+                <tr>
+                    <th>Record ID</th>
+                    <td>{{log.record_id}}</td>
+                    <th>Action Date</th>
+                    <td>{{log.action_datetime}}</td>
+                </tr>
+            </table>
+        </section>
+        <div class="form-actions">
+            <a class="primary-button" href="{{url_for('manage_audit_logs')}}">Back to Audit Logs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}
+Manage Contact Messages
+{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-card">
+        <h1 class="admin-heading">Manage Contact Messages</h1>
+        <form method="GET">
+            <div class="form-field">
+                <label class="form-label">Search</label>
+                <input class="form-input" type="text" name="search" placeholder="Search Message ID, Name, Email"
+                    value="{{search}}">
+            </div>
+            <div class="form-field">
+                <label class="form-label">Sort By</label>
+                <select class="form-input" name="sort_by">
+                    <option value="date_time" {% if selected_sort=="date_time" %}selected{% endif %}>Date</option>
+                    <option value="name" {% if selected_sort=="name" %}selected{% endif %}>Name</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Order</label>
+                <select class="form-input" name="direction">
+                    <option value="asc" {% if selected_direction=="asc" %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if selected_direction=="desc" %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <input class="primary-button" type="submit" value="Apply">
+            </div>
+        </form>
+        {% if messages.items %}
+        <table class="booking-table">
+            <tr>
+                <th>Message ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact Number</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            {% for message in messages.items %}
+            <tr>
+                <td>{{message.message_id}}</td>
+                <td>{{message.name}}</td>
+                <td>{{message.email}}</td>
+                <td>{{message.contact_number}}</td>
+                <td>{{message.date_time}}</td>
+                <td>
+                    <a class="primary-button"
+                        href="{{url_for('manage_contact_message',message_id=message.message_id)}}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="pagination">
+            {% if messages.has_prev %}
+            <a class="primary-button"
+                href="{{url_for('manage_contact_messages',page=messages.prev_num,search=search,sort_by=selected_sort,direction=selected_direction)}}">Previous</a>
+            {% endif %}
+            <span>Page {{messages.page}} of {{messages.pages}}</span>
+            {% if messages.has_next %}
+            <a class="primary-button"
+                href="{{url_for('manage_contact_messages',page=messages.next_num,search=search,sort_by=selected_sort,direction=selected_direction)}}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <h2>No Contact Messages Found</h2>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
