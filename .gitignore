@@ -9,11 +9,14 @@ venv/
 env/
 
 # Flask instance folder
-instance/
+instance/*
+!instance/
+!instance/hotel.db
 
 # Database
 *.db
 *.sqlite3
+!instance/hotel.db
 
 # Environment variables
 .env
